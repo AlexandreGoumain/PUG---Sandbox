@@ -1,0 +1,17 @@
+{
+    "name": "jeudi",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start:pug": "node pug/isAdmin_pug.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "pug": "^3.0.3"
+    }
+}
