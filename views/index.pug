@@ -2,6 +2,12 @@ extends ../layouts/mainLayout
 
 block content
   .container
+    if message
+      #toast.toast.show
+        .toast-content
+          span#toast-message!= message
+        .toast-close ×
+        
     h1 Jean DUPONT
     p Bienvenue sur mon portfolio
     p Contactez-moi à l'adresse email suivante :
@@ -12,4 +18,20 @@ block scripts
     (function preventSpam() {
       const b64encodedEmail = 'amVhbi5kdXBvbnRAZ21haWwuY29t';
       document.getElementById('generate-email').textContent = atob(b64encodedEmail);
-    })(); 
+    })();
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        const toastClose = document.querySelector('.toast-close');
+        
+        toastClose.addEventListener('click', () => {
+          toast.classList.remove('show');
+        });
+        
+       
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 5000);
+      }
+    }); 

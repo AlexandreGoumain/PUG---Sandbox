@@ -1,0 +1,18 @@
+extends ../layouts/mainLayout
+
+block content
+  .container
+    h1 Contactez-moi
+    p Vous avez un projet en tête ? N'hésitez pas à me contacter en remplissant le formulaire ci-dessous.
+    
+    form#contact-form(action="/submit-contact" method="POST")
+      .form-group
+        label(for="email") Email
+        input#email(type="email" name="email" required)
+      
+      .form-group
+        label(for="message") Message
+        textarea#message(name="message" rows="5" required)
+      
+      .form-group
+        button(type="submit") Envoyer votre message 
