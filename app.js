@@ -1,3 +1,4 @@
+import fs from "fs";
 import http from "http";
 import path from "path";
 import pug from "pug";
@@ -6,39 +7,54 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const menuItems = [
+    { path: "/", title: "Home", isActive: true },
+    { path: "/about-me", title: "About", isActive: false },
+    { path: "/references", title: "References", isActive: false },
+    { path: "/contact-me", title: "Contact", isActive: false },
+];
+
 const server = http.createServer((req, res) => {
-    const renderedNavbar = pug.compileFile(
-        path.join(__dirname, "views", "navbar.pug")
-    );
+    const url = req.url;
 
-    const loggedUser = {
-        name: {
-            first: "John",
-            last: "Doe",
-        },
-        birthdate: new Date(1990, 0, 1),
-        location: {
-            city: "Paris",
-            zipcode: "75001",
-        },
-        isAdmin: true,
-    };
+    if (url === "/" || url === "/index.html") {
+        const renderedTemplate = pug.renderFile(
+            path.join(__dirname, "views", "index.pug"),
+            {
+                title: "Portfolio - Accueil",
+                menuItems: menuItems,
+            }
+        );
 
-    const renderedTemplate = pug.renderFile(
-        path.join(__dirname, "views", "isAdmin.pug"),
-        {
-            user: {
-                isAdmin: true,
-            },
-            navbar: renderedNavbar(),
-            loggedUser: loggedUser,
-        }
-    );
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(renderedTemplate);
+    } else if (url.match(/\.(css|js|jpg|png|gif)$/)) {
+        const filePath = path.join(__dirname, "public", url);
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                res.writeHead(404);
+                res.end("File not found");
+                return;
+            }
 
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderedTemplate);
+            const contentType = {
+                ".css": "text/css",
+                ".js": "text/javascript",
+                ".jpg": "image/jpeg",
+                ".png": "image/png",
+            }[path.extname(url)];
+
+            res.writeHead(200, { "Content-Type": contentType });
+            res.end(data);
+        });
+    } else {
+        res.writeHead(404);
+        res.end("Page not found");
+    }
 });
 
-server.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+const port = 3000;
+
+server.listen(port, () => {
+    console.log(`Le serveur est démarré sur http://localhost:${port}`);
 });
