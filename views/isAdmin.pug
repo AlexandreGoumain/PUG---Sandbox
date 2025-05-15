@@ -1,4 +1,15 @@
-if user.isAdmin
-    h1 Access Granted
-else
-    h1 You must be logged as an administrator!
+doctype html
+html
+  body
+    div!= navbar
+    .user-card
+      h4 
+        | hello #{loggedUser.name.first} #{loggedUser.name.last} 
+        small (#{new Date().getFullYear() - loggedUser.birthdate.getFullYear()} ans)
+
+      p né le #{loggedUser.birthdate.toLocaleDateString()}
+
+      p Vit à 
+        strong #{loggedUser.location.city}, #{loggedUser.location.zipcode}.
+
+      span.badge-admin #{loggedUser.isAdmin ? "est administrateur" : "est utilisateur"}
